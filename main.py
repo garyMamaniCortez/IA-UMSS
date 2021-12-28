@@ -132,26 +132,26 @@ comensal = AgenteComensal(ReglasComensal, presupuesto)
 mesero = AgenteMesero(Menu,ModeloMesero,ReglasMesero,"espera","limpiar")
 accion_comensal_base = 'entrar-al-restaurante'
 accion_mesero_base = 'entrar-al-restaurante'
-for i in range(7):
-    print(f'mesero: {accion_mesero_base}')
-    print(f'comensal: {accion_comensal_base}')
-    accion_mesero_base = mesero.actuar(accion_comensal_base)
-    accion_comensal_base = comensal.actuar(accion_comensal_base)
+
+def ciclofor(i):
+    global accion_mesero_base
+    global accion_comensal_base
+    for j in range(i):
+        print(f'mesero: {accion_mesero_base}')
+        print(f'comensal: {accion_comensal_base}')
+        accion_mesero_base = mesero.actuar(accion_comensal_base)
+        accion_comensal_base = comensal.actuar(accion_comensal_base)
+
+ciclofor(7)
 Recomendacion=random.choice(list(Menu))
 plato = comensal.elegir_plato(Menu,Menu[Recomendacion])
 print(f'*******comensal pidio {plato}, el mesero recomendo: {Menu[Recomendacion]}*******')
 print(f'*******presupuesto del comensal: {presupuesto}*******')
-for i in range(5):
-    print(f'mesero: {accion_mesero_base}')
-    print(f'comensal: {accion_comensal_base}')
-    accion_mesero_base = mesero.actuar(accion_comensal_base)
-    accion_comensal_base = comensal.actuar(accion_comensal_base)
+
+ciclofor(5)
 puntuacion_plato = comensal.puntuar_plato(random.randint(0,10),5) # el 5 tiene que venir de una funcion del chef
-print(f'puntuacion del plato: {plato}:{puntuacion_plato}')
-for i in range(2):
-    print(f'mesero: {accion_mesero_base}')
-    print(f'comensal: {accion_comensal_base}')
-    accion_mesero_base = mesero.actuar(accion_comensal_base)
-    accion_comensal_base = comensal.actuar(accion_comensal_base)
+print(f'puntuacion de {plato}:{puntuacion_plato}')
+
+ciclofor(2)
 print(f'mesero: {accion_mesero_base}')
 print(f'comensal: {accion_comensal_base}')

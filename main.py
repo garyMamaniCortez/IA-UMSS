@@ -12,6 +12,47 @@ Menu = {
     65 : 'pizza-vegetariana',
     50 : 'pizza-italiana',
     55 : 'pizza-carnivora'}
+#%%
+# Agente 
+## Reglas del cocinero
+ReglasCocinero = {'espera':'rayar-queso',
+                    'llevar-pedido-al-cocinero':'recibir-pedido',
+                    'recibir-pedido':'preparar-masa',
+                    'preparar-masa':'preparar-salsa',
+                    'preparar-salsa':'preparar-ingredientes',
+                    'preparar-ingredientes':'hornear-pizza',
+                    'hornear-pizza':'comida-lista',
+                    'comida-lista':'espera'}
+calificacion = {'pizza-hawaina': 4,
+                'pizza-peperoni': 5,
+                'pizza-mexicana': 5,
+                'pizza-4-quesos': 6,
+                'pizza-champiñon': 6,
+                'pizza-margarita': 7,
+                'pizza-con-jamon': 5,
+                'pizza-vegetariana': 8,
+                'pizza-italiana': 5,
+                'pizza-carnivora': 9}
+
+class AgenteCocinero:
+    def __init__(self,reglas,esfuerzo,calificacion):
+        self.reglas = reglas
+        self.esfuerzo = esfuerzo
+        self.calificacion = calificacion
+    
+    def actuar(self, percepcion):
+        if not percepcion:
+            return "esperar"
+        if percepcion in self.reglas.keys():
+            return self.reglas[percepcion]
+    
+    def cocinar(self, puntuacion_media):
+        preparar_masa=random.randint(puntuacion_media-2,puntuacion_media+2)
+        preparar_salsa=random.randint(puntuacion_media-2,puntuacion_media+2)
+        preparar_ingredientes=random.randint(puntuacion_media-2,puntuacion_media+2)
+        pizza=[preparar_masa,preparar_salsa,preparar_ingredientes]
+        return statistics.mean(pizza)
+#%%
 # Agente Basado en Modelo
 ## Reglas del mesero
 ReglasMesero = {'espera':'limpiar',

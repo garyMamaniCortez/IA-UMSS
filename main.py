@@ -23,7 +23,7 @@ ReglasCocinero = {'espera':'rayar-queso',
                     'preparar-ingredientes':'hornear-pizza',
                     'hornear-pizza':'comida-lista',
                     'comida-lista':'espera'}
-calificacion = {'pizza-hawaina': 4,
+Calificaciones = {'pizza-hawaina': 4,
                 'pizza-peperoni': 5,
                 'pizza-mexicana': 5,
                 'pizza-4-quesos': 6,
@@ -35,16 +35,17 @@ calificacion = {'pizza-hawaina': 4,
                 'pizza-carnivora': 9}
 
 class AgenteCocinero:
-    def __init__(self,reglas,esfuerzo,calificacion):
+    def __init__(self,reglas,calificaciones):
         self.reglas = reglas
-        self.esfuerzo = esfuerzo
-        self.calificacion = calificacion
+        self.calificaciones = calificaciones
     
     def actuar(self, percepcion):
         if not percepcion:
-            return "esperar"
+            return "espera"
         if percepcion in self.reglas.keys():
             return self.reglas[percepcion]
+        else:
+            return self.reglas["espera"]
     
     def cocinar(self, puntuacion_media):
         preparar_masa=random.randint(puntuacion_media-2,puntuacion_media+2)
@@ -171,17 +172,25 @@ class AgenteComensal:
 presupuesto=random.randint(40,70)
 comensal = AgenteComensal(ReglasComensal, presupuesto)
 mesero = AgenteMesero(Menu,ModeloMesero,ReglasMesero,"espera","limpiar")
+chefsito = AgenteCocinero(ReglasCocinero,Calificaciones)
 accion_comensal_base = 'entrar-al-restaurante'
 accion_mesero_base = 'entrar-al-restaurante'
+accion_chef = 'espera'
 
 def ciclofor(i):
     global accion_mesero_base
     global accion_comensal_base
+    global accion_chef
     for j in range(i):
         print(f'mesero: {accion_mesero_base}')
         print(f'comensal: {accion_comensal_base}')
+        print(f'chef: {accion_chef}')
         accion_mesero_base = mesero.actuar(accion_comensal_base)
         accion_comensal_base = comensal.actuar(accion_comensal_base)
+        accion_chef = chefsito.actuar(accion_mesero_base)
+        while accion_chef != "rayar-queso": #imprime antes de tiempo REVISAR
+            accion_chef = chefsito.actuar(accion_chef)
+            print(f'chef: {accion_chef}')
 
 ciclofor(7)
 Recomendacion=random.choice(list(Menu))
@@ -190,8 +199,8 @@ print(f'*******comensal pidio {plato}, el mesero recomendo: {Menu[Recomendacion]
 print(f'*******presupuesto del comensal: {presupuesto}*******')
 
 ciclofor(5)
-puntuacion_plato = comensal.puntuar_plato(random.randint(0,10),5) # el 5 tiene que venir de una funcion del chef
-print(f'puntuacion de {plato}:{puntuacion_plato}')
+puntuacion_plato = comensal.puntuar_plato(random.randint(0,10),int(chefsito.cocinar(Calificaciones[plato]))) #enviar puntuacion media
+print(f'*******puntuacion de {plato}:{puntuacion_plato}')
 
 ciclofor(2)
 print(f'mesero: {accion_mesero_base}')
